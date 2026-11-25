@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-sceIOt0gpxLDvytZNnuUxyoiETSsYgsc3dvZy9iKEdg=' 'sha256-F6Yur3msFkvkP3PIZuMq3KfCiH9o3MzHg1BHQ6KPQHo=' 'sha256-TLr9z4g+trKUPlbkKo6xRyZYCBAkUWOk6lbSHVQCgJ4='; style-src 'unsafe-inline'; img-src 'self' data: blob: https://tiles.openfreemap.org; font-src 'self' data:; connect-src 'self' https://tiles.openfreemap.org https://nominatim.openstreetmap.org data: blob:; worker-src blob:; manifest-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-sceIOt0gpxLDvytZNnuUxyoiETSsYgsc3dvZy9iKEdg=' 'sha256-F6Yur3msFkvkP3PIZuMq3KfCiH9o3MzHg1BHQ6KPQHo=' 'sha256-1Yp9jsMAgsCzjhVAZi6d0YWZXbI3beI/7M6/uwkzEPM=' 'sha256-erKA9ZfV4OTulQyJIb/hVPKFaYs+Ty2F5OxcnqtZ+/U=' 'sha256-D3caKY73TRkcxqV2fgw47Yta+Zq5LjPKTcOZ6GLD+VQ='; style-src 'unsafe-inline'; img-src 'self' data: blob: https://tiles.openfreemap.org; font-src 'self' data:; connect-src 'self' https://tiles.openfreemap.org https://nominatim.openstreetmap.org data: blob:; worker-src blob:; manifest-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>if (window.top !== window.self) document.documentElement.style.display = 'none';</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -16,6 +16,10 @@
   --line:rgba(29,29,27,.10); --line-strong:rgba(29,29,27,.24); --ai:#44617B;
   --font:"LanYangMing","Noto Serif TC","Songti TC","PMingLiU",serif;
   --ease-out:cubic-bezier(.22,1,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  /* ok-i18n 共用語言選單用的 token 別名 */
+  --color-ink:var(--ink); --color-ink-2:var(--ink-2); --color-hairline:var(--line-strong); --color-card:var(--paper);
+  --color-band:rgba(29,29,27,.05); --color-focus:var(--ai); --shadow-lift:0 0 0 1px var(--line),0 12px 32px rgba(29,29,27,.14);
+  --radius-md:14px; --radius-pill:999px; --text-xs:13px; --text-sm:14px; --dur:.25s; --ease:var(--ease-out); --font-display:var(--font);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -32,6 +36,8 @@ button,input,textarea{font:inherit;color:inherit}
 .top-l .sep{width:1px;height:14px;background:var(--line-strong)}
 .top-l .sub{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top-r{display:flex;align-items:center;gap:8px}
+/* 窄螢幕：主頂欄放不下標題＋按鈕（含語言按鈕）時換行，按鈕靠右排第二列 */
+@media (max-width:700px){body > .top{flex-wrap:wrap;row-gap:10px} body > .top .top-r{margin-left:auto;flex-wrap:wrap;justify-content:flex-end;row-gap:8px}}
 
 /* 按鈕 */
 .ghost{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--line-strong);border-radius:999px;
@@ -122,15 +128,47 @@ input[type=color]::-webkit-color-swatch{border:0;border-radius:999px}
   *{transition-duration:.01ms!important}
   .pill:active,.ghost:active,.pill:hover{transform:none}
 }
+/* ok-i18n:start */
+/* ok-i18n：語言選單與各語言字體。顏色、圓角、陰影全部走頁面自己的 token。 */
+:root:lang(zh-Hans) { --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", sans-serif; --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Helvetica Neue", "Noto Sans SC", "Microsoft YaHei", sans-serif; }
+:root:lang(ja) { --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif; --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif; }
+:root:lang(ko) { --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+:root:lang(hi) { --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI", sans-serif; --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI", sans-serif; }
+:root:lang(hi) body, :root:lang(ko) body, :root:lang(ja) body { letter-spacing: 0; }
+:root:lang(en), :root:lang(es), :root:lang(pt), :root:lang(ms), :root:lang(hi) { word-break: normal; overflow-wrap: break-word; }
+
+.lang { position: relative; flex: none; }
+.lang-btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px 0 9px; font: inherit; font-size: var(--text-xs, 12px); color: var(--color-ink-2); background: transparent; border: 1px solid var(--color-hairline); border-radius: var(--radius-pill, 9999px); cursor: pointer; white-space: nowrap; transition: color var(--dur, 240ms) var(--ease), border-color var(--dur, 240ms) var(--ease), background-color var(--dur, 240ms) var(--ease); }
+.lang-btn svg { width: 14px; height: 14px; flex: none; }
+.lang-btn:hover, .lang-btn[aria-expanded="true"] { color: var(--color-ink); border-color: var(--color-ink); }
+.lang-btn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; transition: none; }
+.lang-btn:active { background: var(--color-band); }
+.lang-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; min-width: 176px; max-height: min(70dvh, 420px); overflow-y: auto; margin: 0; padding: 6px; list-style: none; background: var(--color-card); border-radius: var(--radius-md, 14px); box-shadow: var(--shadow-lift); }
+.lang-menu[hidden] { display: none; }
+.lang-menu button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 9px 12px; font: inherit; font-size: var(--text-sm, 14px); line-height: 1.35; letter-spacing: 0; color: var(--color-ink); background: transparent; border: 0; border-radius: 9px; cursor: pointer; text-align: left; }
+.lang-menu button[lang="zh-Hant"] { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif; }
+.lang-menu button[lang="zh-Hans"] { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif; }
+.lang-menu button[lang="ja"] { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif; }
+.lang-menu button[lang="ko"] { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+.lang-menu button[lang="hi"] { font-family: -apple-system, BlinkMacSystemFont, "Kohinoor Devanagari", "Noto Sans Devanagari", sans-serif; }
+.lang-menu button:hover { background: var(--color-band); }
+.lang-menu button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.lang-menu button[aria-checked="true"]::after { content: ""; width: 9px; height: 5px; margin-top: -3px; border-left: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .lang-btn { transition: none; } }
+/* ok-i18n:end */
 </style>
 </head>
 <body>
 <header class="top">
-  <div class="top-l"><span>地點貼文產生器</span><span class="sep"></span><span class="sub">八組一個單位</span></div>
+  <div class="top-l"><span data-i="app">地點貼文產生器</span><span class="sep"></span><span class="sub" data-i="sub">八組一個單位</span></div>
   <div class="top-r">
-    <button class="ghost" id="openList" type="button">貼上清單</button>
-    <button class="ghost" id="openSettings" type="button">設定</button>
-    <button class="ghost" id="clearAll" type="button">清空全部</button>
+    <button class="ghost" id="openList" type="button" data-i="openList">貼上清單</button>
+    <button class="ghost" id="openSettings" type="button" data-i="settings">設定</button>
+    <button class="ghost" id="clearAll" type="button" data-i="clearAll">清空全部</button>
+    <div class="lang" id="lang">
+  <button type="button" class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu" aria-label="Language"><svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="6.3"/><path d="M1.7 8h12.6M8 1.7c1.8 1.7 2.7 3.8 2.7 6.3S9.8 12.6 8 14.3M8 1.7C6.2 3.4 5.3 5.5 5.3 8s.9 4.6 2.7 6.3"/></svg><span id="langCur">繁中</span></button>
+  <ul class="lang-menu" id="langMenu" role="menu" aria-label="Language" hidden></ul>
+</div>
   </div>
 </header>
 
@@ -138,108 +176,108 @@ input[type=color]::-webkit-color-swatch{border:0;border-radius:999px}
 
 <div class="foot">
   <span class="hint" id="progress"></span>
-  <button class="pill" id="dlAll" type="button">全部下載</button>
-  <span class="hint">把照片拖到預覽上，或按「照片」選擇；點預覽可以調整細節。全部下載會打包成一個 ZIP。</span>
+  <button class="pill" id="dlAll" type="button" data-i="dlAll">全部下載</button>
+  <span class="hint" data-i="footHint">把照片拖到預覽上，或按「照片」選擇；點預覽可以調整細節。全部下載會打包成一個 ZIP。</span>
 </div>
 
 <!-- 設定 -->
 <div class="layer" id="settings" hidden role="dialog" aria-modal="true" aria-labelledby="setTitle">
   <div class="scrim" data-close="settings"></div>
   <aside class="drawer">
-    <div class="drawer-h"><span id="setTitle">設定</span><button class="ghost" type="button" data-close="settings">完成</button></div>
+    <div class="drawer-h"><span id="setTitle" data-i="settings">設定</span><button class="ghost" type="button" data-close="settings" data-i="done">完成</button></div>
 
     <section class="sec">
-      <h2 class="sec-t">地圖</h2>
-      <div class="row"><span class="lab">樣式</span>
+      <h2 class="sec-t" data-i="secMap">地圖</h2>
+      <div class="row"><span class="lab" data-i="style">樣式</span>
         <div class="seg" data-key="mapStyle">
-          <button class="ghost" data-v="glight" type="button">Google 淺色</button>
-          <button class="ghost" data-v="gdark" type="button">Google 夜間</button>
-          <button class="ghost" data-v="navy" type="button">午夜藍</button>
-          <button class="ghost" data-v="teal" type="button">墨綠</button>
-          <button class="ghost" data-v="dark" type="button">深灰</button>
-          <button class="ghost" data-v="light" type="button">淺色</button>
+          <button class="ghost" data-v="glight" type="button" data-i="glight">Google 淺色</button>
+          <button class="ghost" data-v="gdark" type="button" data-i="gdark">Google 夜間</button>
+          <button class="ghost" data-v="navy" type="button" data-i="navy">午夜藍</button>
+          <button class="ghost" data-v="teal" type="button" data-i="teal">墨綠</button>
+          <button class="ghost" data-v="dark" type="button" data-i="dark">深灰</button>
+          <button class="ghost" data-v="light" type="button" data-i="light">淺色</button>
         </div></div>
-      <div class="row"><span class="lab">地圖文字</span>
+      <div class="row"><span class="lab" data-i="labelLang">地圖文字</span>
         <div class="seg" data-key="labelLang">
-          <button class="ghost" data-v="en" type="button">英文</button>
-          <button class="ghost" data-v="zh" type="button">中文</button>
-          <button class="ghost" data-v="local" type="button">當地</button>
+          <button class="ghost" data-v="en" type="button" data-i="llEn">英文</button>
+          <button class="ghost" data-v="zh" type="button" data-i="llZh">中文</button>
+          <button class="ghost" data-v="local" type="button" data-i="llLocal">當地</button>
         </div></div>
-      <div class="row"><span class="lab">預設縮放</span>
+      <div class="row"><span class="lab" data-i="defZoom">預設縮放</span>
         <div class="rng"><input type="range" id="set-zoom" min="10" max="19" step="0.25"><span class="v" id="set-zoomV"></span></div></div>
     </section>
 
     <section class="sec">
-      <h2 class="sec-t">標點</h2>
-      <div class="row"><span class="lab">樣式</span>
+      <h2 class="sec-t" data-i="secMarker">標點</h2>
+      <div class="row"><span class="lab" data-i="style">樣式</span>
         <div class="seg" data-key="marker">
-          <button class="ghost" data-v="dot" type="button">圓點</button>
-          <button class="ghost" data-v="pin" type="button">圖釘</button>
-          <input type="color" id="set-mcolor" aria-label="標點顏色">
+          <button class="ghost" data-v="dot" type="button" data-i="dot">圓點</button>
+          <button class="ghost" data-v="pin" type="button" data-i="pin">圖釘</button>
+          <input type="color" id="set-mcolor" aria-label="標點顏色" data-ia="aria-label:mcolor">
         </div></div>
-      <div class="row"><span class="lab">紅色箭頭</span>
+      <div class="row"><span class="lab" data-i="arrow">紅色箭頭</span>
         <div class="seg" data-key="arrow">
-          <button class="ghost" data-v="none" type="button">不要</button>
-          <button class="ghost" data-v="left" type="button">從左下</button>
-          <button class="ghost" data-v="right" type="button">從右下</button>
+          <button class="ghost" data-v="none" type="button" data-i="none">不要</button>
+          <button class="ghost" data-v="left" type="button" data-i="fromBL">從左下</button>
+          <button class="ghost" data-v="right" type="button" data-i="fromBR">從右下</button>
         </div></div>
     </section>
 
     <section class="sec">
-      <h2 class="sec-t">資訊卡</h2>
-      <div class="row"><span class="lab">內容</span>
+      <h2 class="sec-t" data-i="secCard">資訊卡</h2>
+      <div class="row"><span class="lab" data-i="content">內容</span>
         <div class="seg" data-key="cardShow">
-          <button class="ghost" data-v="addr" type="button">地址</button>
-          <button class="ghost" data-v="coord" type="button">經緯度</button>
-          <button class="ghost" data-v="both" type="button">兩者</button>
+          <button class="ghost" data-v="addr" type="button" data-i="addr">地址</button>
+          <button class="ghost" data-v="coord" type="button" data-i="coord">經緯度</button>
+          <button class="ghost" data-v="both" type="button" data-i="both">兩者</button>
         </div></div>
-      <div class="row"><span class="lab">位置</span>
+      <div class="row"><span class="lab" data-i="position">位置</span>
         <div class="seg" data-key="cardPos">
-          <button class="ghost" data-v="tl" type="button">左上</button>
-          <button class="ghost" data-v="tr" type="button">右上</button>
-          <button class="ghost" data-v="bl" type="button">左下</button>
-          <button class="ghost" data-v="br" type="button">右下</button>
+          <button class="ghost" data-v="tl" type="button" data-i="tl">左上</button>
+          <button class="ghost" data-v="tr" type="button" data-i="tr">右上</button>
+          <button class="ghost" data-v="bl" type="button" data-i="bl">左下</button>
+          <button class="ghost" data-v="br" type="button" data-i="br">右下</button>
         </div></div>
-      <div class="row"><span class="lab">字級</span>
+      <div class="row"><span class="lab" data-i="fontSize">字級</span>
         <div class="rng"><input type="range" id="set-cardSize" min="20" max="40" step="1"><span class="v" id="set-cardSizeV"></span></div></div>
-      <p class="hint">地址留空時，資訊卡會改放經緯度。</p>
+      <p class="hint" data-i="cardHint">地址留空時，資訊卡會改放經緯度。</p>
     </section>
 
     <section class="sec">
-      <h2 class="sec-t">版面</h2>
-      <div class="row"><span class="lab">模式</span>
+      <h2 class="sec-t" data-i="secLayout">版面</h2>
+      <div class="row"><span class="lab" data-i="mode">模式</span>
         <div class="seg" data-key="layoutMode">
-          <button class="ghost" data-v="auto" type="button">自動</button>
-          <button class="ghost" data-v="manual" type="button">自訂</button>
+          <button class="ghost" data-v="auto" type="button" data-i="auto">自動</button>
+          <button class="ghost" data-v="manual" type="button" data-i="manual">自訂</button>
         </div></div>
-      <div class="row" id="ratioRow"><span class="lab">比例</span>
+      <div class="row" id="ratioRow"><span class="lab" data-i="ratio">比例</span>
         <div class="seg" data-key="ratio">
           <button class="ghost" data-v="3:4" type="button">3:4</button>
           <button class="ghost" data-v="4:5" type="button">4:5</button>
           <button class="ghost" data-v="1:1" type="button">1:1</button>
         </div></div>
-      <div class="row" id="photoPctRow"><span class="lab">照片高度</span>
+      <div class="row" id="photoPctRow"><span class="lab" data-i="photoPct">照片高度</span>
         <div class="rng"><input type="range" id="set-photoPct" min="30" max="75" step="1"><span class="v" id="set-photoPctV"></span></div></div>
-      <div class="row"><span class="lab">雙張左右比例</span>
+      <div class="row"><span class="lab" data-i="split">雙張左右比例</span>
         <div class="rng"><input type="range" id="set-split" min="25" max="75" step="1"><span class="v" id="set-splitV"></span></div></div>
-      <p class="hint">自動：直幅兩張並排，照片佔 60%；直幅一張，照片佔 70%；橫幅一張，照片佔 50%；比例都是 3:4。</p>
+      <p class="hint" data-i="layoutHint">自動：直幅兩張並排，照片佔 60%；直幅一張，照片佔 70%；橫幅一張，照片佔 50%；比例都是 3:4。</p>
     </section>
 
     <section class="sec">
-      <h2 class="sec-t">輸出</h2>
-      <div class="row"><span class="lab">寬度</span>
+      <h2 class="sec-t" data-i="secOut">輸出</h2>
+      <div class="row"><span class="lab" data-i="width">寬度</span>
         <div class="seg" data-key="outScale">
           <button class="ghost" data-v="1" type="button">1080</button>
           <button class="ghost" data-v="2" type="button">2160</button>
           <button class="ghost" data-v="3" type="button">3240</button>
         </div></div>
-      <div class="row"><span class="lab">格式</span>
+      <div class="row"><span class="lab" data-i="format">格式</span>
         <div class="seg" data-key="outFormat">
           <button class="ghost" data-v="jpg" type="button">JPG</button>
           <button class="ghost" data-v="png" type="button">PNG</button>
         </div></div>
     </section>
-    <p class="hint">設定會套用到全部八組，並自動記住。</p>
+    <p class="hint" data-i="setHint">設定會套用到全部八組，並自動記住。</p>
   </aside>
 </div>
 
@@ -247,9 +285,9 @@ input[type=color]::-webkit-color-swatch{border:0;border-radius:999px}
 <div class="layer" id="listDlg" hidden role="dialog" aria-modal="true" aria-labelledby="listTitle">
   <div class="scrim" data-close="listDlg"></div>
   <div class="dialog">
-    <div class="drawer-h" style="position:static"><span id="listTitle">貼上清單</span><button class="ghost" type="button" data-close="listDlg">取消</button></div>
-    <textarea class="txt" id="listText" rows="9" placeholder="說明一行、網址一行，依序填入 01 到 08 組"></textarea>
-    <div class="ed-actions"><span class="hint">說明文字會當作檔名；照片不受影響。</span><button class="ghost" id="listFill" type="button">填入八組</button></div>
+    <div class="drawer-h" style="position:static"><span id="listTitle" data-i="openList">貼上清單</span><button class="ghost" type="button" data-close="listDlg" data-i="cancel">取消</button></div>
+    <textarea class="txt" id="listText" rows="9" placeholder="說明一行、網址一行，依序填入 01 到 08 組" data-ia="placeholder:listPh"></textarea>
+    <div class="ed-actions"><span class="hint" data-i="listHint">說明文字會當作檔名；照片不受影響。</span><button class="ghost" id="listFill" type="button" data-i="listFill">填入八組</button></div>
   </div>
 </div>
 
@@ -258,42 +296,42 @@ input[type=color]::-webkit-color-swatch{border:0;border-radius:999px}
   <header class="top">
     <div class="top-l"><span id="edTitle"></span><span class="sep"></span><span class="sub" id="edState"></span></div>
     <div class="top-r">
-      <button class="ghost" id="edPrev" type="button">上一組</button>
-      <button class="ghost" id="edNext" type="button">下一組</button>
-      <button class="ghost" id="edClose" type="button">完成</button>
+      <button class="ghost" id="edPrev" type="button" data-i="edPrev">上一組</button>
+      <button class="ghost" id="edNext" type="button" data-i="edNext">下一組</button>
+      <button class="ghost" id="edClose" type="button" data-i="done">完成</button>
     </div>
   </header>
   <div class="ed-body">
     <div class="ed-stage">
-      <canvas id="edcv" aria-label="這一組的完整預覽"></canvas>
-      <span class="hint">拖曳移動照片與地圖　滾輪縮放　雙擊地圖把標點移到那裡</span>
+      <canvas id="edcv" aria-label="這一組的完整預覽" data-ia="aria-label:edcv"></canvas>
+      <span class="hint" data-i="edHint">拖曳移動照片與地圖　滾輪縮放　雙擊地圖把標點移到那裡</span>
     </div>
     <aside class="ed-side">
       <section class="sec">
-        <h2 class="sec-t">照片</h2>
+        <h2 class="sec-t" data-i="photo">照片</h2>
         <div id="edPhotos"></div>
-        <div class="ed-actions"><span class="hint">直幅可放一或兩張，橫幅一張</span><label class="ghost">加入照片<input type="file" id="edFile" accept="image/*" multiple hidden></label></div>
+        <div class="ed-actions"><span class="hint" data-i="edPhotoHint">直幅可放一或兩張，橫幅一張</span><label class="ghost"><span data-i="addPhoto">加入照片</span><input type="file" id="edFile" accept="image/*" multiple hidden></label></div>
       </section>
       <section class="sec">
-        <h2 class="sec-t">地點</h2>
-        <div class="row col"><label for="edUrl">Google 地圖網址</label>
+        <h2 class="sec-t" data-i="secPlace">地點</h2>
+        <div class="row col"><label for="edUrl" data-i="gmapsUrl">Google 地圖網址</label>
           <input class="txt" id="edUrl" type="text" autocomplete="off" spellcheck="false">
           <div class="msg" id="edMsg"></div></div>
-        <div class="row col"><label for="edName">地點名稱</label>
+        <div class="row col"><label for="edName" data-i="placeName">地點名稱</label>
           <textarea class="txt" id="edName" rows="2"></textarea></div>
-        <div class="row col"><label for="edAddr">地址</label>
-          <textarea class="txt" id="edAddr" rows="3" placeholder="留空時，資訊卡會改放經緯度"></textarea>
-          <div class="ed-actions"><span class="hint">可以用座標向 OpenStreetMap 查地址</span><button class="ghost" id="edGeo" type="button">用座標查地址</button></div></div>
-        <div class="row col"><label for="edLabel">標點下方文字</label>
+        <div class="row col"><label for="edAddr" data-i="addr">地址</label>
+          <textarea class="txt" id="edAddr" rows="3" placeholder="留空時，資訊卡會改放經緯度" data-ia="placeholder:addrPh"></textarea>
+          <div class="ed-actions"><span class="hint" data-i="geoHint">可以用座標向 OpenStreetMap 查地址</span><button class="ghost" id="edGeo" type="button" data-i="geoBtn">用座標查地址</button></div></div>
+        <div class="row col"><label for="edLabel" data-i="markerLabel">標點下方文字</label>
           <input class="txt" id="edLabel" type="text"></div>
       </section>
       <section class="sec">
-        <h2 class="sec-t">地圖</h2>
-        <div class="row"><span class="lab">這組縮放</span>
+        <h2 class="sec-t" data-i="secMap">地圖</h2>
+        <div class="row"><span class="lab" data-i="thisZoom">這組縮放</span>
           <div class="rng"><input type="range" id="edZoom" min="10" max="19" step="0.25"><span class="v" id="edZoomV"></span></div></div>
-        <div class="ed-actions"><button class="ghost" id="edZoomReset" type="button">縮放跟隨預設</button><button class="ghost" id="edRecenter" type="button">標點回正</button></div>
+        <div class="ed-actions"><button class="ghost" id="edZoomReset" type="button" data-i="zoomReset">縮放跟隨預設</button><button class="ghost" id="edRecenter" type="button" data-i="recenter">標點回正</button></div>
       </section>
-      <div style="display:flex;justify-content:center;padding-top:8px"><button class="pill" id="edDl" type="button">下載這張</button></div>
+      <div style="display:flex;justify-content:center;padding-top:8px"><button class="pill" id="edDl" type="button" data-i="dlOne">下載這張</button></div>
     </aside>
   </div>
 </div>
@@ -443,6 +481,8 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
+  // 介面文字走 ok-i18n（OK.t / OK.fmt）；畫進輸出圖片的文字都是使用者自己輸入的，不翻譯
+  const T = (k, v) => { const s = window.OK ? OK.t(k) : ""; return v ? s.replace(/\{(\w+)\}/g, (m, n) => n in v ? v[n] : m) : s; };
 
   // ===================================================================
   // 1. 常數與全域設定（套用到全部八組，會自動記住）
@@ -708,7 +748,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   }
   function mapErr() {
     const now = Date.now();
-    if (now - lastMapErr > 8000) { lastMapErr = now; toast("部分地圖資料載入失敗，請確認網路連線"); }
+    if (now - lastMapErr > 8000) { lastMapErr = now; toast(T("mapErr")); }
   }
   async function ensureStyle() {
     if (!window.maplibregl) throw new Error("maplibre missing");
@@ -974,12 +1014,12 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     ctx = canvas.getContext("2d");
     ctx.setTransform(K, 0, 0, K, 0, 0);
     ctx.clearRect(0, 0, W, g.h);
-    if (!sl.photos.length) drawPlaceholder(g.photo, "放入照片", "#E9E9E4");
+    if (!sl.photos.length) drawPlaceholder(g.photo, T("phPhoto"), "#E9E9E4");
     else {
       sl.photos.forEach((p, i) => drawPhoto(p, g.cells[i]));
     }
     const mr = g.map;
-    if (sl.lat === null) { drawPlaceholder(mr, "貼上地圖網址", "#DCDCD6"); return; }
+    if (sl.lat === null) { drawPlaceholder(mr, T("phUrl"), "#DCDCD6"); return; }
     const st = STYLES[G.mapStyle];
     ctx.fillStyle = st.bg; ctx.fillRect(mr.x, mr.y, mr.w, mr.h);
     if (mapImg) ctx.drawImage(mapImg, mr.x, mr.y, mr.w, mr.h);
@@ -997,13 +1037,11 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   // 8. 八組格狀畫面
   // ===================================================================
   function slotState(sl) {
-    if (sl.downloaded && isReady(sl)) return ["已下載", "ok"];
-    const miss = [];
-    if (!sl.photos.length) miss.push("照片");
-    if (sl.lat === null) miss.push("地點");
-    if (miss.length) return ["缺" + miss.join("、"), ""];
-    if (sl.approx) return ["位置待確認", ""];
-    return ["可下載", "ok"];
+    if (sl.downloaded && isReady(sl)) return [T("stDone"), "ok"];
+    const noPhoto = !sl.photos.length, noPlace = sl.lat === null;
+    if (noPhoto || noPlace) return [T(noPhoto && noPlace ? "missBoth" : noPhoto ? "missPhoto" : "missPlace"), ""];
+    if (sl.approx) return [T("stApprox"), ""];
+    return [T("stReady"), "ok"];
   }
   const isReady = sl => sl.photos.length > 0 && sl.lat !== null;
   function buildGrid() {
@@ -1013,13 +1051,14 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
       el.className = "slot";
       el.innerHTML =
         '<div class="slot-h"><span class="no">' + pad2(sl.i + 1) + '</span><span class="cap"></span><span class="st"></span></div>' +
-        '<canvas class="thumb" tabindex="0" role="button" aria-label="第 ' + (sl.i + 1) + ' 組，點一下調整細節"></canvas>' +
-        '<div class="slot-in"><label class="ghost">照片<input type="file" accept="image/*" multiple hidden></label>' +
-        '<input class="txt" type="text" placeholder="Google 地圖網址" autocomplete="off" spellcheck="false" aria-label="第 ' + (sl.i + 1) + ' 組 Google 地圖網址"></div>' +
+        '<canvas class="thumb" tabindex="0" role="button"></canvas>' +
+        '<div class="slot-in"><label class="ghost"><span data-i="photo">照片</span><input type="file" accept="image/*" multiple hidden></label>' +
+        '<input class="txt" type="text" autocomplete="off" spellcheck="false"></div>' +
         '<div class="msg"></div>';
       grid.appendChild(el);
       sl.el = { root: el, cap: el.querySelector(".cap"), st: el.querySelector(".st"), cv: el.querySelector("canvas"),
         file: el.querySelector("input[type=file]"), url: el.querySelector("input.txt"), msg: el.querySelector(".msg") };
+      labelSlot(sl);
       sl.el.url.value = sl.url;
       sl.el.file.addEventListener("change", e => { addFiles(sl, e.target.files); e.target.value = ""; });
       let t;
@@ -1037,12 +1076,19 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
       });
     });
   }
+  function labelSlot(sl) {                         // 每組的無障礙標籤與提示文字（換語言時重設）
+    const n = sl.i + 1;
+    sl.el.cv.setAttribute("aria-label", T("thumbAria", { n }));
+    sl.el.url.placeholder = T("gmapsUrl");
+    sl.el.url.setAttribute("aria-label", T("urlAria", { n }));
+    sl.el.root.querySelector('[data-i="photo"]').textContent = T("photo");
+  }
   function fillMsg(node, sl) {
-    node.textContent = sl.msg || "";
+    node.textContent = sl.msg ? T(sl.msg) : "";      // sl.msg 存的是字典 key
     node.className = "msg" + (sl.msgKind ? " " + sl.msgKind : "");
     if (sl.shortUrl) {
       const a = document.createElement("a");
-      a.href = sl.shortUrl; a.target = "_blank"; a.rel = "noopener"; a.textContent = "打開";
+      a.href = sl.shortUrl; a.target = "_blank"; a.rel = "noopener"; a.textContent = T("open");
       node.append(" ", a);
     }
   }
@@ -1055,7 +1101,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   function paintThumb(sl) { drawSlot(sl.el.cv, sl, THUMB_K, thumbMap(sl)); paintMeta(sl); }
   function updateFoot() {
     const ready = slots.filter(isReady).length;
-    $("progress").textContent = "可下載 " + ready + " / " + SLOT_COUNT + " 組";
+    $("progress").textContent = T("progress", { n: ready, total: SLOT_COUNT });
   }
   function paintAll() { slots.forEach(paintThumb); updateFoot(); edRequest(); }
 
@@ -1064,13 +1110,13 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   // ===================================================================
   const loadImage = f => new Promise(res => {
     const img = new Image();
-    img.onload = () => res({ img, name: f.name || "貼上的圖片", s: 1, ox: 0, oy: 0 });
-    img.onerror = () => { toast("這張圖片讀不出來：" + (f.name || "")); res(null); };
+    img.onload = () => res({ img, name: f.name || "", s: 1, ox: 0, oy: 0 });
+    img.onerror = () => { toast(T("badImg", { name: f.name || "" })); res(null); };
     img.src = URL.createObjectURL(f);
   });
   async function addFiles(sl, files) {
     const list = [...files].filter(f => f && f.type.startsWith("image/"));
-    if (!list.length) { toast("沒有讀到圖片檔"); return; }
+    if (!list.length) { toast(T("noImg")); return; }
     const batch = (await Promise.all(list.map(loadImage))).filter(Boolean);
     if (!batch.length) return;
     if (isAuto()) placeAuto(sl, batch); else placeManual(sl, batch);
@@ -1081,7 +1127,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   function placeManual(sl, batch) {
     let room = 2 - sl.photos.length;
     if (room <= 0) { sl.photos = []; room = 2; }
-    if (batch.length > room) toast("最多兩張，只放入前 " + room + " 張");
+    if (batch.length > room) toast(T("maxTwo", { n: room }));
     sl.photos.push(...batch.slice(0, room));
   }
   function placeAuto(sl, batch) {
@@ -1089,11 +1135,11 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     const onePortrait = sl.photos.length === 1 && isPortrait(sl.photos[0].img);
     if (portraits.length) {
       sl.photos = portraits.length >= 2 ? portraits.slice(0, 2) : onePortrait ? [sl.photos[0], portraits[0]] : [portraits[0]];
-      if (landscapes.length) toast("直幅版面只放直幅照片，橫幅那張沒有放入");
-      else if (portraits.length > 2) toast("直幅最多兩張，只放入前兩張");
+      if (landscapes.length) toast(T("portraitOnly"));
+      else if (portraits.length > 2) toast(T("portraitMax"));
     } else {
       sl.photos = [landscapes[0]];
-      if (landscapes.length > 1) toast("橫幅版面只放一張，用第一張");
+      if (landscapes.length > 1) toast(T("landscapeOne"));
     }
   }
 
@@ -1129,27 +1175,27 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     if (r.empty) { Object.assign(sl, { lat: null, lng: null, msg: "", msgKind: "" }); return done(); }
     if (r.short) {
       Object.assign(sl, { lat: null, lng: null, shortUrl: sl.url.trim(), msgKind: "warn",
-        msg: "短網址讀不到內容。點「打開」，等網址出現「@」後，把完整網址貼回來。" });
+        msg: "mShort" });
       return done();
     }
     if (r.notFound) {
       if (!r.name && !r.address) {
-        Object.assign(sl, { lat: null, lng: null, msgKind: "warn", msg: "網址裡沒有座標。請等 Google 地圖載入完成、網址出現「@」後再複製。" });
+        Object.assign(sl, { lat: null, lng: null, msgKind: "warn", msg: "mNoCoord" });
         return done();
       }
-      Object.assign(sl, { lat: null, lng: null, name: r.name || "", addr: r.address || "", panX: 0, panY: 0, msgKind: "warn", msg: "網址裡只有地址，正在推算位置…" });
+      Object.assign(sl, { lat: null, lng: null, name: r.name || "", addr: r.address || "", panX: 0, panY: 0, msgKind: "warn", msg: "mAddrOnly" });
       done();
       const v = await geocodeGuess(sl.name, sl.addr);
       if (tok !== sl.geoTok) return;
-      if (v) Object.assign(sl, { lat: v.lat, lng: v.lng, approx: true, msg: "位置是用地址推算的。點預覽進入調整，雙擊正確位置修正。" });
-      else sl.msg = "查不到這個地址的位置。請等 Google 地圖載入完成、網址出現「@」後再複製。";
+      if (v) Object.assign(sl, { lat: v.lat, lng: v.lng, approx: true, msg: "mApprox" });
+      else sl.msg = "mAddrFail";
       return done();
     }
     const changed = sl.lat !== r.lat || sl.lng !== r.lng;
     if (changed) Object.assign(sl, { panX: 0, panY: 0, zoom: null });
     if (changed || r.name) sl.name = r.name || "";
     Object.assign(sl, { lat: r.lat, lng: r.lng, approx: !r.precise, addr: r.address || "" });
-    sl.msg = r.precise ? "" : "讀到的是地圖畫面中心，標點可能略有偏差，可以點預覽進入調整。";
+    sl.msg = r.precise ? "" : "mView";
     sl.msgKind = r.precise ? "" : "warn";
     done();
   }
@@ -1176,8 +1222,8 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     const sl = ed.sl; if (!sl) return;
     $("edTitle").textContent = pad2(sl.i + 1) + (sl.caption ? "　" + sl.caption : "");
     setVal("edUrl", sl.url); setVal("edName", sl.name); setVal("edAddr", sl.addr); setVal("edLabel", sl.mlabel);
-    $("edLabel").placeholder = sl.name.trim().split("\n")[0] || "預設帶入地點名稱第一行";
-    const z = zoomOf(sl); $("edZoom").value = z; $("edZoomV").textContent = String(Math.round(z * 4) / 4) + (sl.zoom === null ? "（預設）" : "");
+    $("edLabel").placeholder = sl.name.trim().split("\n")[0] || T("labelPh");
+    const z = zoomOf(sl); $("edZoom").value = z; $("edZoomV").textContent = String(Math.round(z * 4) / 4) + (sl.zoom === null ? T("zoomDefault") : "");
     fillMsg($("edMsg"), sl);
     $("edGeo").disabled = sl.lat === null;
     const [txt] = slotState(sl); $("edState").textContent = txt;
@@ -1185,14 +1231,14 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     sl.photos.forEach((p, i) => {
       const row = document.createElement("div"); row.className = "item";
       const nm = document.createElement("span"); nm.className = "nm";
-      nm.textContent = (sl.photos.length > 1 ? (i === 0 ? "左　" : "右　") : "") + p.name + "　" + p.img.naturalWidth + "×" + p.img.naturalHeight;
+      nm.textContent = (sl.photos.length > 1 ? T(i === 0 ? "leftP" : "rightP") : "") + (p.name || T("pasted")) + "　" + p.img.naturalWidth + "×" + p.img.naturalHeight;
       row.appendChild(nm);
       if (sl.photos.length > 1 && i === 0) {
-        const sw = document.createElement("button"); sw.className = "ghost"; sw.type = "button"; sw.textContent = "左右對調";
+        const sw = document.createElement("button"); sw.className = "ghost"; sw.type = "button"; sw.textContent = T("swap");
         sw.onclick = () => { sl.photos.reverse(); edFill(); };
         row.appendChild(sw);
       }
-      const rm = document.createElement("button"); rm.className = "ghost"; rm.type = "button"; rm.textContent = "移除";
+      const rm = document.createElement("button"); rm.className = "ghost"; rm.type = "button"; rm.textContent = T("remove");
       rm.onclick = () => { sl.photos.splice(i, 1); sl.downloaded = false; edFill(); };
       row.appendChild(rm);
       list.appendChild(row);
@@ -1203,7 +1249,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     ed.open = true; ed.sl = sl; ed.hasFrame = false; activeSlot = sl.i;
     $("editor").hidden = false; document.body.classList.add("locked");
     edFill(); edRender();
-    ensureStyle().then(edRequest).catch(() => toast("這個瀏覽器無法繪製地圖（需要 WebGL）"));
+    ensureStyle().then(edRequest).catch(() => toast(T("noWebGL")));
     $("edClose").focus();
   }
   function closeEditor() {
@@ -1238,7 +1284,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   $("edDl").addEventListener("click", () => downloadOne(ed.sl, $("edDl")));
   $("edGeo").addEventListener("click", async () => {
     const sl = ed.sl; if (sl.lat === null) return;
-    const btn = $("edGeo"); btn.disabled = true; btn.textContent = "查詢中";
+    const btn = $("edGeo"); btn.disabled = true; btn.textContent = T("geoBusy");
     try {
       const u = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&accept-language=en&lat=" + sl.lat + "&lon=" + sl.lng;
       const res = await fetch(u, { headers: { "Accept": "application/json" } });
@@ -1249,9 +1295,9 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
       const l3 = [a.city || a.town || a.village || a.state, a.country].filter(Boolean).join(", ");
       const text = [l1, l2, l3].filter(Boolean).join("\n") || j.display_name || "";
       if (!text) throw new Error("empty");
-      sl.addr = text; saveSlots(); toast("已填入地址，請核對一次"); edFill();
-    } catch (e) { toast("查不到地址，請手動輸入，或維持顯示經緯度"); }
-    finally { btn.disabled = false; btn.textContent = "用座標查地址"; }
+      sl.addr = text; saveSlots(); toast(T("geoOk")); edFill();
+    } catch (e) { toast(T("geoFail")); }
+    finally { btn.disabled = false; btn.textContent = T("geoBtn"); }
   });
 
   // ---- 編輯畫面上的拖曳、滾輪、雙擊 ----
@@ -1290,7 +1336,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     sl.lng = ((ll.lng + 540) % 360) - 180; sl.lat = ll.lat;
     sl.panX += p.x - a.x; sl.panY += p.y - a.y;      // 地圖不動，只有標點移過去
     sl.approx = false; sl.msg = ""; sl.msgKind = ""; sl.downloaded = false;
-    saveSlots(); toast("標點已移到 " + sl.lat.toFixed(5) + ", " + sl.lng.toFixed(5)); edFill();
+    saveSlots(); toast(T("moved", { lat: sl.lat.toFixed(5), lng: sl.lng.toFixed(5) })); edFill();
   });
   edcv.addEventListener("wheel", e => {
     const sl = ed.sl, t = hitTarget(sl, toDesign(e)); if (!t) return;
@@ -1331,7 +1377,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   // 13. 輸出：單張 JPG / PNG，全部打包成一個 ZIP
   // ===================================================================
   function fileBase(sl) {
-    const n = (sl.caption || sl.name.trim().split("\n")[0] || "地點").replace(/[\\/:*?"<>|\n\r]+/g, "").slice(0, 40);
+    const n = (sl.caption || sl.name.trim().split("\n")[0] || T("fileName")).replace(/[\\/:*?"<>|\n\r]+/g, "").slice(0, 40);
     return pad2(sl.i + 1) + "_" + n;
   }
   async function renderExport(sl) {
@@ -1350,33 +1396,33 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
   }
   async function downloadOne(sl, btn) {
-    if (!isReady(sl)) { toast("第 " + (sl.i + 1) + " 組還不能下載：" + slotState(sl)[0]); return; }
-    const label = btn.textContent; btn.disabled = true; btn.textContent = "產生中";
+    if (!isReady(sl)) { toast(T("notReady", { n: sl.i + 1, state: slotState(sl)[0] })); return; }
+    btn.disabled = true; btn.textContent = T("generating");
     try {
       const f = await renderExport(sl);
       saveBlob(f.blob, f.name); sl.downloaded = true; saveSlots();
-      toast("已下載 " + f.name + "，" + W * outScale() + " × " + geom(sl).h * outScale());
-    } catch (e) { toast("圖片產生失敗，請再試一次"); }
-    finally { btn.disabled = false; btn.textContent = label; paintMeta(sl); if (ed.open) edFill(); }
+      toast(T("downloaded", { name: f.name, w: W * outScale(), h: geom(sl).h * outScale() }));
+    } catch (e) { toast(T("genFail")); }
+    finally { btn.disabled = false; btn.textContent = T("dlOne"); paintMeta(sl); if (ed.open) edFill(); }
   }
   async function downloadAll() {
     const ready = slots.filter(isReady);
-    if (!ready.length) { toast("還沒有可以下載的組別：每組需要照片和地點"); return; }
+    if (!ready.length) { toast(T("noneReady")); return; }
     const btn = $("dlAll"); btn.disabled = true;
     const files = [];
     try {
       for (let k = 0; k < ready.length; k++) {
-        btn.textContent = "產生中 " + (k + 1) + " / " + ready.length;
+        btn.textContent = T("genProgress", { k: k + 1, n: ready.length });
         const f = await renderExport(ready[k]);
         files.push({ name: f.name, data: new Uint8Array(await f.blob.arrayBuffer()) });
         ready[k].downloaded = true; paintMeta(ready[k]);
       }
       const d = new Date();
-      saveBlob(new Blob([makeZip(files)], { type: "application/zip" }), "地點貼文_" + d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) + ".zip");
+      saveBlob(new Blob([makeZip(files)], { type: "application/zip" }), T("zipName") + "_" + d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate()) + ".zip");
       const rest = SLOT_COUNT - ready.length;
-      toast("已下載 " + files.length + " 張（ZIP）" + (rest ? "，另有 " + rest + " 組還沒完成" : ""));
-    } catch (e) { toast("打包失敗，請再試一次"); }
-    finally { btn.disabled = false; btn.textContent = "全部下載"; saveSlots(); updateFoot(); }
+      toast(rest ? T("zipDoneRest", { n: files.length, r: rest }) : T("zipDone", { n: files.length }));
+    } catch (e) { toast(T("zipFail")); }
+    finally { btn.disabled = false; btn.textContent = T("dlAll"); saveSlots(); updateFoot(); }
   }
   $("dlAll").addEventListener("click", downloadAll);
 
@@ -1418,19 +1464,19 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   document.querySelectorAll("[data-close]").forEach(el => el.addEventListener("click", () => closeSheet(el.dataset.close)));
   $("listFill").addEventListener("click", () => {
     const items = parseList($("listText").value);
-    if (!items.length) { toast("清單裡沒有找到網址"); return; }
+    if (!items.length) { toast(T("noUrl")); return; }
     items.slice(0, SLOT_COUNT).forEach((it, k) => {
       const sl = slots[k];
       sl.caption = it.caption; sl.url = it.url; sl.el.url.value = it.url;
       applyUrl(sl);
     });
     $("listText").value = ""; closeSheet("listDlg");
-    toast("已填入 " + Math.min(items.length, SLOT_COUNT) + " 組" + (items.length > SLOT_COUNT ? "，超過八組的部分沒有放入" : ""));
+    toast(T(items.length > SLOT_COUNT ? "filledOver" : "filled", { n: Math.min(items.length, SLOT_COUNT) }));
   });
   $("clearAll").addEventListener("click", () => {
-    if (!confirm("清空全部八組？照片、網址和調整結果都會移除，這個動作無法復原。")) return;
+    if (!confirm(T("confirmClear"))) return;
     slots.forEach(sl => { const el = sl.el; Object.assign(sl, newSlot(sl.i)); sl.el = el; el.url.value = ""; });
-    jobs.clear(); saveSlots(); paintAll(); toast("已清空，設定保留");
+    jobs.clear(); saveSlots(); paintAll(); toast(T("cleared"));
   });
   window.addEventListener("dragover", e => e.preventDefault());
   window.addEventListener("drop", e => e.preventDefault());
@@ -1440,7 +1486,7 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
     e.preventDefault();
     const sl = ed.open ? ed.sl : slots[activeSlot];
     addFiles(sl, items.map(i => i.getAsFile()).filter(Boolean));
-    if (!ed.open) toast("照片已放入第 " + (sl.i + 1) + " 組");
+    if (!ed.open) toast(T("pastedTo", { n: sl.i + 1 }));
   });
   window.addEventListener("keydown", e => {
     if (e.key !== "Escape") return;
@@ -1455,9 +1501,98 @@ function isShortLink(u) { return /(^|\/\/)(maps\.app\.goo\.gl|goo\.gl)\//i.test(
   buildGrid();
   slots.forEach(sl => { if (sl.url && sl.lat === null) applyUrl(sl); });
   paintAll();
+  document.addEventListener("ok:lang", () => {      // 換語言：重畫所有程式產生的介面文字
+    slots.forEach(labelSlot); paintAll();
+    if (ed.open) edFill();
+    if (!$("edGeo").disabled) $("edGeo").textContent = T("geoBtn");
+  });
   if (document.fonts) Promise.all(['300 20px "LanYangMing"', '600 20px "LanYangMing"'].map(f => document.fonts.load(f))).then(paintAll, () => {});
 })();
 
+</script>
+<script>window.OK_I18N = {"_title":["地點貼文產生器","地点贴文生成器","Location Post Maker","スポット投稿メーカー","장소 게시물 메이커","Creador de posts de lugares","Criador de posts de lugares","लोकेशन पोस्ट मेकर","Pembuat Hantaran Lokasi"],"app":["地點貼文產生器","地点贴文生成器","Location Post Maker","スポット投稿メーカー","장소 게시물 메이커","Creador de posts de lugares","Criador de posts de lugares","लोकेशन पोस्ट मेकर","Pembuat Hantaran Lokasi"],"sub":["八組一個單位","八组一个单位","8 posts per batch","8件でワンセット","8개가 한 세트","8 posts por tanda","8 posts por lote","एक बैच में 8 पोस्ट","8 hantaran satu set"],"openList":["貼上清單","粘贴清单","Paste list","リストを貼り付け","목록 붙여넣기","Pegar lista","Colar lista","सूची पेस्ट करें","Tampal senarai"],"settings":["設定","设置","Settings","設定","설정","Ajustes","Configurações","सेटिंग्स","Tetapan"],"clearAll":["清空全部","全部清空","Clear all","すべてクリア","모두 지우기","Borrar todo","Limpar tudo","सब हटाएँ","Kosongkan semua"],"dlAll":["全部下載","全部下载","Download all","すべてダウンロード","모두 다운로드","Descargar todo","Baixar tudo","सब डाउनलोड करें","Muat turun semua"],"footHint":["把照片拖到預覽上，或按「照片」選擇；點預覽可以調整細節。全部下載會打包成一個 ZIP。","把照片拖到预览上，或点“照片”选择；点预览可以调整细节。全部下载会打包成一个 ZIP。","Drag photos onto a preview, or tap “Photo” to pick them. Tap a preview to fine-tune it. “Download all” bundles everything into one ZIP.","写真をプレビューにドラッグするか、「写真」から選んでください。プレビューをタップすると細かく調整できます。「すべてダウンロード」は1つのZIPにまとめます。","사진을 미리보기에 끌어다 놓거나 ‘사진’을 눌러 고르세요. 미리보기를 누르면 세부 조정을 할 수 있어요. ‘모두 다운로드’는 ZIP 하나로 묶어 줍니다.","Arrastra las fotos a una vista previa o toca «Foto» para elegirlas. Toca una vista previa para ajustar los detalles. «Descargar todo» lo junta todo en un ZIP.","Arraste as fotos para uma prévia ou toque em “Foto” para escolher. Toque numa prévia para ajustar os detalhes. “Baixar tudo” junta tudo num único ZIP.","फ़ोटो को प्रीव्यू पर खींचें, या चुनने के लिए “फ़ोटो” दबाएँ। बारीकी से बदलाव के लिए प्रीव्यू पर टैप करें। “सब डाउनलोड करें” सब कुछ एक ZIP में देता है।","Seret foto ke pratonton, atau tekan “Foto” untuk memilih. Tekan pratonton untuk melaras butiran. “Muat turun semua” menghimpunkan semuanya dalam satu ZIP."],"done":["完成","完成","Done","完了","완료","Listo","Concluir","हो गया","Selesai"],"secMap":["地圖","地图","Map","地図","지도","Mapa","Mapa","नक्शा","Peta"],"style":["樣式","样式","Style","スタイル","스타일","Estilo","Estilo","स्टाइल","Gaya"],"glight":["Google 淺色","Google 浅色","Google Light","Google ライト","Google 라이트","Google claro","Google claro","Google लाइट","Google Cerah"],"gdark":["Google 夜間","Google 夜间","Google Night","Google ナイト","Google 나이트","Google noche","Google noturno","Google नाइट","Google Malam"],"navy":["午夜藍","午夜蓝","Midnight blue","ミッドナイトブルー","미드나잇 블루","Azul medianoche","Azul meia-noite","मिडनाइट ब्लू","Biru tengah malam"],"teal":["墨綠","墨绿","Deep green","深緑","딥 그린","Verde oscuro","Verde-escuro","गहरा हरा","Hijau tua"],"dark":["深灰","深灰","Dark gray","ダークグレー","다크 그레이","Gris oscuro","Cinza-escuro","गहरा ग्रे","Kelabu gelap"],"light":["淺色","浅色","Light","ライト","라이트","Claro","Claro","लाइट","Cerah"],"labelLang":["地圖文字","地图文字","Map labels","地図の文字","지도 글자","Texto del mapa","Texto do mapa","नक्शे के लेबल","Label peta"],"llEn":["英文","英文","English","英語","영어","Inglés","Inglês","अंग्रेज़ी","Inggeris"],"llZh":["中文","中文","Chinese","中国語","중국어","Chino","Chinês","चीनी","Cina"],"llLocal":["當地","当地","Local","現地語","현지어","Local","Local","स्थानीय","Tempatan"],"defZoom":["預設縮放","默认缩放","Default zoom","標準ズーム","기본 확대","Zoom predeterminado","Zoom padrão","डिफ़ॉल्ट ज़ूम","Zum lalai"],"secMarker":["標點","标点","Marker","マーカー","마커","Marcador","Marcador","मार्कर","Penanda"],"dot":["圓點","圆点","Dot","ドット","점","Punto","Ponto","डॉट","Titik"],"pin":["圖釘","图钉","Pin","ピン","핀","Chincheta","Alfinete","पिन","Pin"],"mcolor":["標點顏色","标点颜色","Marker color","マーカーの色","마커 색상","Color del marcador","Cor do marcador","मार्कर का रंग","Warna penanda"],"arrow":["紅色箭頭","红色箭头","Red arrow","赤い矢印","빨간 화살표","Flecha roja","Seta vermelha","लाल तीर","Anak panah merah"],"none":["不要","不要","None","なし","없음","Ninguna","Nenhuma","नहीं","Tiada"],"fromBL":["從左下","从左下","From bottom left","左下から","왼쪽 아래에서","Desde abajo a la izquierda","De baixo à esquerda","नीचे बाएँ से","Dari kiri bawah"],"fromBR":["從右下","从右下","From bottom right","右下から","오른쪽 아래에서","Desde abajo a la derecha","De baixo à direita","नीचे दाएँ से","Dari kanan bawah"],"secCard":["資訊卡","信息卡","Info card","情報カード","정보 카드","Tarjeta de info","Cartão de info","जानकारी कार्ड","Kad info"],"content":["內容","内容","Content","内容","내용","Contenido","Conteúdo","सामग्री","Kandungan"],"addr":["地址","地址","Address","住所","주소","Dirección","Endereço","पता","Alamat"],"coord":["經緯度","经纬度","Coordinates","緯度経度","위경도","Coordenadas","Coordenadas","निर्देशांक","Koordinat"],"both":["兩者","两者","Both","両方","둘 다","Ambos","Ambos","दोनों","Kedua-dua"],"position":["位置","位置","Position","位置","위치","Posición","Posição","जगह","Kedudukan"],"tl":["左上","左上","Top left","左上","왼쪽 위","Arriba izq.","Em cima à esq.","ऊपर बाएँ","Atas kiri"],"tr":["右上","右上","Top right","右上","오른쪽 위","Arriba der.","Em cima à dir.","ऊपर दाएँ","Atas kanan"],"bl":["左下","左下","Bottom left","左下","왼쪽 아래","Abajo izq.","Em baixo à esq.","नीचे बाएँ","Bawah kiri"],"br":["右下","右下","Bottom right","右下","오른쪽 아래","Abajo der.","Em baixo à dir.","नीचे दाएँ","Bawah kanan"],"fontSize":["字級","字号","Text size","文字サイズ","글자 크기","Tamaño de texto","Tamanho do texto","टेक्स्ट साइज़","Saiz teks"],"cardHint":["地址留空時，資訊卡會改放經緯度。","地址留空时，信息卡会改放经纬度。","If the address is empty, the info card shows the coordinates instead.","住所が空欄のときは、情報カードに緯度経度を表示します。","주소를 비워 두면 정보 카드에 위경도가 대신 표시돼요.","Si la dirección está vacía, la tarjeta muestra las coordenadas.","Se o endereço ficar vazio, o cartão mostra as coordenadas.","पता खाली हो तो जानकारी कार्ड में निर्देशांक दिखेंगे।","Jika alamat kosong, kad info akan memaparkan koordinat."],"secLayout":["版面","版面","Layout","レイアウト","레이아웃","Diseño","Layout","लेआउट","Susun atur"],"mode":["模式","模式","Mode","モード","모드","Modo","Modo","मोड","Mod"],"auto":["自動","自动","Auto","自動","자동","Automático","Automático","ऑटो","Auto"],"manual":["自訂","自定义","Custom","カスタム","사용자 지정","Personalizado","Personalizado","कस्टम","Tersuai"],"ratio":["比例","比例","Aspect ratio","比率","비율","Proporción","Proporção","अनुपात","Nisbah"],"photoPct":["照片高度","照片高度","Photo height","写真の高さ","사진 높이","Altura de la foto","Altura da foto","फ़ोटो की ऊँचाई","Tinggi foto"],"split":["雙張左右比例","双张左右比例","Two-photo split","2枚の左右比率","두 장 좌우 비율","Reparto de dos fotos","Divisão de duas fotos","दो फ़ोटो का बँटवारा","Pembahagian dua foto"],"layoutHint":["自動：直幅兩張並排，照片佔 60%；直幅一張，照片佔 70%；橫幅一張，照片佔 50%；比例都是 3:4。","自动：竖幅两张并排，照片占 60%；竖幅一张，照片占 70%；横幅一张，照片占 50%；比例都是 3:4。","Auto: two portrait photos side by side take 60%; one portrait photo takes 70%; one landscape photo takes 50%. The ratio is always 3:4.","自動：縦向き2枚を並べると写真は60%、縦向き1枚なら70%、横向き1枚なら50%。比率はすべて3:4です。","자동: 세로 사진 두 장을 나란히 놓으면 사진이 60%, 세로 한 장은 70%, 가로 한 장은 50%를 차지해요. 비율은 모두 3:4예요.","Automático: dos fotos verticales lado a lado ocupan el 60 %; una vertical, el 70 %; una horizontal, el 50 %. La proporción siempre es 3:4.","Automático: duas fotos na vertical lado a lado ocupam 60%; uma vertical, 70%; uma horizontal, 50%. A proporção é sempre 3:4.","ऑटो: दो पोर्ट्रेट फ़ोटो साथ-साथ 60% लेती हैं; एक पोर्ट्रेट फ़ोटो 70%; एक लैंडस्केप फ़ोटो 50%। अनुपात हमेशा 3:4 रहता है।","Auto: dua foto potret bersebelahan mengambil 60%; satu foto potret 70%; satu foto landskap 50%. Nisbahnya sentiasa 3:4."],"secOut":["輸出","输出","Export","書き出し","내보내기","Exportar","Exportar","एक्सपोर्ट","Eksport"],"width":["寬度","宽度","Width","幅","너비","Ancho","Largura","चौड़ाई","Lebar"],"format":["格式","格式","Format","形式","형식","Formato","Formato","फ़ॉर्मैट","Format"],"setHint":["設定會套用到全部八組，並自動記住。","设置会应用到全部八组，并自动记住。","Settings apply to all 8 posts and are saved automatically.","設定は8件すべてに適用され、自動で保存されます。","설정은 8개 모두에 적용되고 자동으로 저장돼요.","Los ajustes se aplican a los 8 posts y se guardan solos.","As configurações valem para os 8 posts e são salvas automaticamente.","सेटिंग्स सभी 8 पोस्ट पर लागू होती हैं और अपने-आप सेव रहती हैं।","Tetapan digunakan pada kesemua 8 hantaran dan disimpan secara automatik."],"cancel":["取消","取消","Cancel","キャンセル","취소","Cancelar","Cancelar","रद्द करें","Batal"],"listPh":["說明一行、網址一行，依序填入 01 到 08 組","说明一行、网址一行，依次填入 01 到 08 组","One line of caption, one line of URL — fills posts 01 to 08 in order","説明を1行、URLを1行。01〜08に順番に入ります","설명 한 줄, URL 한 줄 — 01~08에 순서대로 채워져요","Una línea de texto y una de URL; se rellenan del 01 al 08 en orden","Uma linha de legenda e uma de URL; preenche do 01 ao 08 em ordem","एक लाइन कैप्शन, एक लाइन URL — 01 से 08 तक क्रम से भरेगा","Satu baris kapsyen, satu baris URL — diisi ke 01 hingga 08 mengikut urutan"],"listHint":["說明文字會當作檔名；照片不受影響。","说明文字会当作文件名；照片不受影响。","Captions become the file names; photos aren’t affected.","説明はファイル名になります。写真には影響しません。","설명은 파일 이름이 돼요. 사진에는 영향이 없어요.","El texto se usa como nombre de archivo; las fotos no cambian.","A legenda vira o nome do arquivo; as fotos não mudam.","कैप्शन फ़ाइल का नाम बनेगा; फ़ोटो पर असर नहीं होगा।","Kapsyen dijadikan nama fail; foto tidak terjejas."],"listFill":["填入八組","填入八组","Fill the 8 posts","8件に入力","8개에 채우기","Rellenar los 8","Preencher os 8","8 पोस्ट में भरें","Isi 8 hantaran"],"edPrev":["上一組","上一组","Previous","前へ","이전","Anterior","Anterior","पिछला","Sebelum"],"edNext":["下一組","下一组","Next","次へ","다음","Siguiente","Próximo","अगला","Seterusnya"],"edcv":["這一組的完整預覽","这一组的完整预览","Full preview of this post","この投稿の全体プレビュー","이 게시물의 전체 미리보기","Vista previa completa de este post","Prévia completa deste post","इस पोस्ट का पूरा प्रीव्यू","Pratonton penuh hantaran ini"],"edHint":["拖曳移動照片與地圖　滾輪縮放　雙擊地圖把標點移到那裡","拖动移动照片与地图　滚轮缩放　双击地图把标点移到那里","Drag to move photo and map · Scroll to zoom · Double-click the map to move the marker there","ドラッグで写真と地図を移動　ホイールでズーム　地図をダブルクリックでマーカーを移動","드래그로 사진과 지도 이동 · 휠로 확대/축소 · 지도를 더블클릭하면 마커가 그곳으로 이동","Arrastra para mover foto y mapa · Rueda para hacer zoom · Doble clic en el mapa para mover el marcador","Arraste para mover foto e mapa · Role para dar zoom · Clique duas vezes no mapa para mover o marcador","फ़ोटो और नक्शा खिसकाने के लिए खींचें · ज़ूम के लिए स्क्रॉल करें · मार्कर हटाने के लिए नक्शे पर डबल-क्लिक करें","Seret untuk alih foto dan peta · Skrol untuk zum · Dwiklik peta untuk alih penanda ke situ"],"photo":["照片","照片","Photo","写真","사진","Foto","Foto","फ़ोटो","Foto"],"edPhotoHint":["直幅可放一或兩張，橫幅一張","竖幅可放一或两张，横幅一张","Portrait: 1 or 2 photos. Landscape: 1 photo","縦向きは1〜2枚、横向きは1枚","세로는 1~2장, 가로는 1장","Vertical: 1 o 2 fotos. Horizontal: 1","Vertical: 1 ou 2 fotos. Horizontal: 1","पोर्ट्रेट: 1 या 2 फ़ोटो। लैंडस्केप: 1 फ़ोटो","Potret: 1 atau 2 foto. Landskap: 1 foto"],"addPhoto":["加入照片","添加照片","Add photos","写真を追加","사진 추가","Añadir fotos","Adicionar fotos","फ़ोटो जोड़ें","Tambah foto"],"secPlace":["地點","地点","Place","場所","장소","Lugar","Local","जगह","Lokasi"],"gmapsUrl":["Google 地圖網址","Google 地图网址","Google Maps URL","Google マップの URL","Google 지도 URL","URL de Google Maps","URL do Google Maps","Google Maps URL","URL Google Maps"],"placeName":["地點名稱","地点名称","Place name","場所の名前","장소 이름","Nombre del lugar","Nome do local","जगह का नाम","Nama lokasi"],"addrPh":["留空時，資訊卡會改放經緯度","留空时，信息卡会改放经纬度","Leave empty to show coordinates on the info card","空欄なら情報カードに緯度経度を表示","비워 두면 정보 카드에 위경도가 표시돼요","Si lo dejas vacío, la tarjeta muestra las coordenadas","Se ficar vazio, o cartão mostra as coordenadas","खाली छोड़ने पर कार्ड में निर्देशांक दिखेंगे","Biarkan kosong untuk paparkan koordinat pada kad info"],"geoHint":["可以用座標向 OpenStreetMap 查地址","可以用坐标向 OpenStreetMap 查地址","Look up the address from the coordinates via OpenStreetMap","座標から OpenStreetMap で住所を調べられます","좌표로 OpenStreetMap에서 주소를 찾을 수 있어요","Busca la dirección en OpenStreetMap a partir de las coordenadas","Busque o endereço no OpenStreetMap pelas coordenadas","निर्देशांक से OpenStreetMap पर पता खोजें","Cari alamat daripada koordinat melalui OpenStreetMap"],"geoBtn":["用座標查地址","用坐标查地址","Find address","座標から住所を検索","좌표로 주소 찾기","Buscar dirección","Buscar endereço","पता खोजें","Cari alamat"],"markerLabel":["標點下方文字","标点下方文字","Text under marker","マーカー下の文字","마커 아래 글자","Texto bajo el marcador","Texto abaixo do marcador","मार्कर के नीचे का टेक्स्ट","Teks di bawah penanda"],"thisZoom":["這組縮放","这组缩放","Zoom for this post","この投稿のズーム","이 게시물 확대","Zoom de este post","Zoom deste post","इस पोस्ट का ज़ूम","Zum hantaran ini"],"zoomReset":["縮放跟隨預設","缩放跟随默认","Use default zoom","標準ズームに戻す","기본 확대 따르기","Usar zoom predeterminado","Usar zoom padrão","डिफ़ॉल्ट ज़ूम लगाएँ","Guna zum lalai"],"recenter":["標點回正","标点回正","Recenter marker","マーカーを中央へ","마커 가운데로","Centrar marcador","Centralizar marcador","मार्कर बीच में करें","Tengahkan penanda"],"dlOne":["下載這張","下载这张","Download this one","これをダウンロード","이 이미지 다운로드","Descargar esta","Baixar esta","यह डाउनलोड करें","Muat turun yang ini"],"mapErr":["部分地圖資料載入失敗，請確認網路連線","部分地图数据加载失败，请检查网络连接","Some map data didn’t load. Please check your connection.","一部の地図データを読み込めませんでした。ネット接続を確認してください","일부 지도 데이터를 불러오지 못했어요. 인터넷 연결을 확인해 주세요","No se cargaron algunos datos del mapa. Revisa tu conexión.","Alguns dados do mapa não carregaram. Verifique sua conexão.","नक्शे का कुछ डेटा लोड नहीं हुआ। कृपया अपना कनेक्शन जाँचें।","Sebahagian data peta gagal dimuatkan. Sila semak sambungan anda."],"phPhoto":["放入照片","放入照片","Add a photo","写真を入れる","사진 넣기","Añade una foto","Adicione uma foto","फ़ोटो जोड़ें","Masukkan foto"],"phUrl":["貼上地圖網址","粘贴地图网址","Paste a map URL","地図の URL を貼り付け","지도 URL 붙여넣기","Pega una URL del mapa","Cole uma URL do mapa","नक्शे का URL पेस्ट करें","Tampal URL peta"],"stDone":["已下載","已下载","Downloaded","ダウンロード済み","다운로드됨","Descargada","Baixada","डाउनलोड हो गया","Dimuat turun"],"missPhoto":["缺照片","缺照片","Needs photo","写真がありません","사진 없음","Falta foto","Falta foto","फ़ोटो चाहिए","Perlu foto"],"missPlace":["缺地點","缺地点","Needs place","場所がありません","장소 없음","Falta lugar","Falta local","जगह चाहिए","Perlu lokasi"],"missBoth":["缺照片、地點","缺照片、地点","Needs photo, place","写真・場所がありません","사진·장소 없음","Falta foto y lugar","Falta foto e local","फ़ोटो, जगह चाहिए","Perlu foto, lokasi"],"stApprox":["位置待確認","位置待确认","Check position","位置を要確認","위치 확인 필요","Revisa la posición","Confira a posição","जगह जाँचें","Semak kedudukan"],"stReady":["可下載","可下载","Ready","ダウンロード可","다운로드 가능","Lista","Pronta","तैयार","Sedia"],"thumbAria":["第 {n} 組，點一下調整細節","第 {n} 组，点一下调整细节","Post {n} — tap to fine-tune","{n}件目 — タップで細かく調整","{n}번 — 눌러서 세부 조정","Post {n}: toca para ajustar","Post {n}: toque para ajustar","पोस्ट {n} — बदलाव के लिए टैप करें","Hantaran {n} — tekan untuk melaras"],"urlAria":["第 {n} 組 Google 地圖網址","第 {n} 组 Google 地图网址","Google Maps URL for post {n}","{n}件目の Google マップ URL","{n}번 Google 지도 URL","URL de Google Maps del post {n}","URL do Google Maps do post {n}","पोस्ट {n} का Google Maps URL","URL Google Maps untuk hantaran {n}"],"open":["打開","打开","Open","開く","열기","Abrir","Abrir","खोलें","Buka"],"progress":["可下載 {n} / {total} 組","可下载 {n} / {total} 组","Ready: {n} / {total}","ダウンロード可 {n} / {total} 件","다운로드 가능 {n} / {total}개","Listas: {n} / {total}","Prontas: {n} / {total}","तैयार: {n} / {total}","Sedia: {n} / {total}"],"pasted":["貼上的圖片","粘贴的图片","Pasted image","貼り付けた画像","붙여넣은 이미지","Imagen pegada","Imagem colada","पेस्ट की गई इमेज","Imej ditampal"],"badImg":["這張圖片讀不出來：{name}","这张图片读取不了：{name}","Couldn’t read this image: {name}","この画像を読み込めません：{name}","이 이미지를 읽을 수 없어요: {name}","No se pudo leer esta imagen: {name}","Não foi possível ler esta imagem: {name}","यह इमेज पढ़ी नहीं जा सकी: {name}","Imej ini tidak dapat dibaca: {name}"],"noImg":["沒有讀到圖片檔","没有读到图片文件","No image files found","画像ファイルがありません","이미지 파일이 없어요","No se encontraron imágenes","Nenhuma imagem encontrada","कोई इमेज फ़ाइल नहीं मिली","Tiada fail imej ditemui"],"maxTwo":["最多兩張，只放入前 {n} 張","最多两张，只放入前 {n} 张","Up to 2 photos — only the first {n} were added","最大2枚です。最初の{n}枚だけ入れました","최대 2장이에요. 처음 {n}장만 넣었어요","Máximo 2 fotos: solo se añadieron las primeras {n}","Máximo de 2 fotos: só as primeiras {n} entraram","ज़्यादा से ज़्यादा 2 फ़ोटो — सिर्फ़ पहली {n} जोड़ी गईं","Maksimum 2 foto — hanya {n} yang pertama dimasukkan"],"portraitOnly":["直幅版面只放直幅照片，橫幅那張沒有放入","竖幅版面只放竖幅照片，横幅那张没有放入","Portrait layouts take portrait photos only — the landscape one wasn’t added","縦向きレイアウトには縦向き写真だけ入ります。横向きの写真は入れていません","세로 레이아웃에는 세로 사진만 들어가요. 가로 사진은 넣지 않았어요","El diseño vertical solo admite fotos verticales; la horizontal no se añadió","O layout vertical aceita só fotos verticais; a horizontal não entrou","पोर्ट्रेट लेआउट में सिर्फ़ पोर्ट्रेट फ़ोटो आती हैं — लैंडस्केप वाली नहीं जोड़ी गई","Susun atur potret hanya untuk foto potret — foto landskap tidak dimasukkan"],"portraitMax":["直幅最多兩張，只放入前兩張","竖幅最多两张，只放入前两张","Up to 2 portrait photos — only the first 2 were added","縦向きは最大2枚です。最初の2枚だけ入れました","세로는 최대 2장이에요. 처음 2장만 넣었어요","Máximo 2 fotos verticales: solo se añadieron las 2 primeras","Máximo de 2 fotos verticais: só as 2 primeiras entraram","ज़्यादा से ज़्यादा 2 पोर्ट्रेट फ़ोटो — सिर्फ़ पहली 2 जोड़ी गईं","Maksimum 2 foto potret — hanya 2 yang pertama dimasukkan"],"landscapeOne":["橫幅版面只放一張，用第一張","横幅版面只放一张，用第一张","Landscape layouts take 1 photo — using the first one","横向きレイアウトは1枚だけです。最初の1枚を使います","가로 레이아웃은 1장만 들어가요. 첫 번째 사진을 사용해요","El diseño horizontal admite 1 foto: se usa la primera","O layout horizontal aceita 1 foto: usando a primeira","लैंडस्केप लेआउट में 1 फ़ोटो आती है — पहली वाली ली गई","Susun atur landskap hanya 1 foto — foto pertama digunakan"],"mShort":["短網址讀不到內容。點「打開」，等網址出現「@」後，把完整網址貼回來。","短网址读取不到内容。点“打开”，等网址出现“@”后，把完整网址粘贴回来。","Short links can’t be read. Tap “Open”, wait until the URL contains “@”, then paste the full URL back here.","短縮 URL は読み込めません。「開く」をタップし、URL に「@」が出たら完全な URL を貼り直してください。","단축 URL은 읽을 수 없어요. ‘열기’를 누르고 URL에 ‘@’가 나타나면 전체 URL을 다시 붙여넣어 주세요.","Los enlaces cortos no se pueden leer. Toca «Abrir», espera a que la URL tenga «@» y pega aquí la URL completa.","Links curtos não podem ser lidos. Toque em “Abrir”, espere a URL mostrar “@” e cole a URL completa aqui.","छोटे लिंक पढ़े नहीं जा सकते। “खोलें” दबाएँ, URL में “@” आने तक रुकें, फिर पूरा URL यहाँ पेस्ट करें।","Pautan pendek tidak dapat dibaca. Tekan “Buka”, tunggu sehingga URL ada “@”, kemudian tampal URL penuh di sini."],"mNoCoord":["網址裡沒有座標。請等 Google 地圖載入完成、網址出現「@」後再複製。","网址里没有坐标。请等 Google 地图加载完成、网址出现“@”后再复制。","This URL has no coordinates. Wait for Google Maps to finish loading and for “@” to appear in the URL, then copy it.","URL に座標がありません。Google マップの読み込みが終わり、URL に「@」が出てからコピーしてください。","URL에 좌표가 없어요. Google 지도가 다 열리고 URL에 ‘@’가 나타난 뒤 복사해 주세요.","La URL no tiene coordenadas. Espera a que Google Maps termine de cargar y aparezca «@» en la URL, y cópiala.","A URL não tem coordenadas. Espere o Google Maps carregar e aparecer “@” na URL, depois copie.","इस URL में निर्देशांक नहीं हैं। Google Maps पूरा लोड होने और URL में “@” आने के बाद कॉपी करें।","URL ini tiada koordinat. Tunggu Google Maps selesai dimuatkan dan “@” muncul dalam URL, kemudian salin."],"mAddrOnly":["網址裡只有地址，正在推算位置…","网址里只有地址，正在推算位置…","The URL only has an address — estimating the location…","URL には住所しかありません。位置を推定中…","URL에 주소만 있어요. 위치를 추정하는 중…","La URL solo tiene una dirección; calculando la ubicación…","A URL só tem um endereço; estimando a localização…","URL में सिर्फ़ पता है — जगह का अनुमान लगाया जा रहा है…","URL hanya ada alamat — sedang menganggar lokasi…"],"mApprox":["位置是用地址推算的。點預覽進入調整，雙擊正確位置修正。","位置是用地址推算的。点预览进入调整，双击正确位置修正。","The location was estimated from the address. Tap the preview to adjust, then double-click the right spot to fix it.","位置は住所から推定しました。プレビューをタップして、正しい場所をダブルクリックで修正してください。","위치는 주소로 추정했어요. 미리보기를 눌러 들어가서 정확한 곳을 더블클릭해 고쳐 주세요.","La ubicación se calculó con la dirección. Toca la vista previa y haz doble clic en el punto correcto para corregirla.","A localização foi estimada pelo endereço. Toque na prévia e clique duas vezes no ponto certo para corrigir.","जगह का अनुमान पते से लगाया गया है। प्रीव्यू पर टैप करें और सही जगह पर डबल-क्लिक करके ठीक करें।","Lokasi dianggarkan daripada alamat. Tekan pratonton, kemudian dwiklik tempat yang betul untuk membetulkannya."],"mAddrFail":["查不到這個地址的位置。請等 Google 地圖載入完成、網址出現「@」後再複製。","查不到这个地址的位置。请等 Google 地图加载完成、网址出现“@”后再复制。","Couldn’t locate this address. Wait for Google Maps to finish loading and for “@” to appear in the URL, then copy it.","この住所の位置が見つかりません。Google マップの読み込みが終わり、URL に「@」が出てからコピーしてください。","이 주소의 위치를 찾지 못했어요. Google 지도가 다 열리고 URL에 ‘@’가 나타난 뒤 복사해 주세요.","No se encontró esta dirección. Espera a que Google Maps termine de cargar y aparezca «@» en la URL, y cópiala.","Não foi possível localizar este endereço. Espere o Google Maps carregar e aparecer “@” na URL, depois copie.","यह पता नहीं मिला। Google Maps पूरा लोड होने और URL में “@” आने के बाद कॉपी करें।","Alamat ini tidak ditemui. Tunggu Google Maps selesai dimuatkan dan “@” muncul dalam URL, kemudian salin."],"mView":["讀到的是地圖畫面中心，標點可能略有偏差，可以點預覽進入調整。","读到的是地图画面中心，标点可能略有偏差，可以点预览进入调整。","This is the center of the map view, so the marker may be slightly off. Tap the preview to adjust.","読み取ったのは地図画面の中心なので、マーカーが少しずれることがあります。プレビューをタップして調整できます。","지도 화면의 중심을 읽었기 때문에 마커가 조금 어긋날 수 있어요. 미리보기를 눌러 조정하세요.","Es el centro de la vista del mapa, así que el marcador puede desviarse un poco. Toca la vista previa para ajustarlo.","Este é o centro da vista do mapa, então o marcador pode ficar um pouco fora. Toque na prévia para ajustar.","यह नक्शे के व्यू का केंद्र है, इसलिए मार्कर थोड़ा हटा हो सकता है। ठीक करने के लिए प्रीव्यू पर टैप करें।","Ini titik tengah paparan peta, jadi penanda mungkin sedikit tersasar. Tekan pratonton untuk melaras."],"labelPh":["預設帶入地點名稱第一行","默认带入地点名称第一行","Defaults to the first line of the place name","既定では場所名の1行目が入ります","기본값은 장소 이름의 첫 줄이에요","Por defecto, la primera línea del nombre del lugar","Por padrão, a primeira linha do nome do local","डिफ़ॉल्ट रूप से जगह के नाम की पहली लाइन","Lalai: baris pertama nama lokasi"],"zoomDefault":["（預設）","（默认）"," (default)","（標準）"," (기본)"," (predet.)"," (padrão)"," (डिफ़ॉल्ट)"," (lalai)"],"leftP":["左　","左　","Left · ","左　","왼쪽 · ","Izq. · ","Esq. · ","बाएँ · ","Kiri · "],"rightP":["右　","右　","Right · ","右　","오른쪽 · ","Der. · ","Dir. · ","दाएँ · ","Kanan · "],"swap":["左右對調","左右对调","Swap sides","左右を入れ替え","좌우 바꾸기","Intercambiar","Trocar lados","अदला-बदली करें","Tukar sisi"],"remove":["移除","移除","Remove","削除","삭제","Quitar","Remover","हटाएँ","Buang"],"noWebGL":["這個瀏覽器無法繪製地圖（需要 WebGL）","这个浏览器无法绘制地图（需要 WebGL）","This browser can’t draw the map (WebGL required)","このブラウザでは地図を描画できません（WebGL が必要です）","이 브라우저에서는 지도를 그릴 수 없어요 (WebGL 필요)","Este navegador no puede dibujar el mapa (requiere WebGL)","Este navegador não consegue desenhar o mapa (requer WebGL)","यह ब्राउज़र नक्शा नहीं बना सकता (WebGL ज़रूरी है)","Pelayar ini tidak dapat melukis peta (perlu WebGL)"],"geoBusy":["查詢中","查询中","Searching…","検索中…","찾는 중…","Buscando…","Buscando…","खोज रहे हैं…","Mencari…"],"geoOk":["已填入地址，請核對一次","已填入地址，请核对一次","Address filled in — please double-check it","住所を入力しました。一度確認してください","주소를 채웠어요. 한 번 확인해 주세요","Dirección añadida; revísala una vez","Endereço preenchido; confira uma vez","पता भर दिया गया — कृपया एक बार जाँच लें","Alamat telah diisi — sila semak sekali lagi"],"geoFail":["查不到地址，請手動輸入，或維持顯示經緯度","查不到地址，请手动输入，或保持显示经纬度","Couldn’t find an address. Type it in, or keep showing the coordinates.","住所が見つかりません。手入力するか、緯度経度の表示のままにしてください","주소를 찾지 못했어요. 직접 입력하거나 위경도 표시를 그대로 두세요","No se encontró la dirección. Escríbela tú o deja las coordenadas.","Endereço não encontrado. Digite manualmente ou mantenha as coordenadas.","पता नहीं मिला। इसे खुद लिखें, या निर्देशांक ही दिखने दें।","Alamat tidak ditemui. Taip sendiri, atau kekalkan paparan koordinat."],"moved":["標點已移到 {lat}, {lng}","标点已移到 {lat}, {lng}","Marker moved to {lat}, {lng}","マーカーを {lat}, {lng} に移動しました","마커를 {lat}, {lng}(으)로 옮겼어요","Marcador movido a {lat}, {lng}","Marcador movido para {lat}, {lng}","मार्कर {lat}, {lng} पर ले जाया गया","Penanda dialih ke {lat}, {lng}"],"fileName":["地點","地点","Place","場所","장소","Lugar","Local","जगह","Lokasi"],"notReady":["第 {n} 組還不能下載：{state}","第 {n} 组还不能下载：{state}","Post {n} isn’t ready yet: {state}","{n}件目はまだダウンロードできません：{state}","{n}번은 아직 다운로드할 수 없어요: {state}","El post {n} aún no está listo: {state}","O post {n} ainda não está pronto: {state}","पोस्ट {n} अभी तैयार नहीं है: {state}","Hantaran {n} belum sedia: {state}"],"generating":["產生中","生成中","Creating…","作成中…","만드는 중…","Creando…","Criando…","बन रहा है…","Menjana…"],"genFail":["圖片產生失敗，請再試一次","图片生成失败，请再试一次","Couldn’t create the image. Please try again.","画像を作成できませんでした。もう一度お試しください","이미지를 만들지 못했어요. 다시 시도해 주세요","No se pudo crear la imagen. Inténtalo de nuevo.","Não foi possível criar a imagem. Tente de novo.","इमेज नहीं बन सकी। कृपया फिर से कोशिश करें।","Imej gagal dijana. Sila cuba lagi."],"downloaded":["已下載 {name}，{w} × {h}","已下载 {name}，{w} × {h}","Downloaded {name}, {w} × {h}","{name} をダウンロードしました（{w} × {h}）","{name} 다운로드 완료, {w} × {h}","Descargada {name}, {w} × {h}","Baixada {name}, {w} × {h}","{name} डाउनलोड हुई, {w} × {h}","{name} dimuat turun, {w} × {h}"],"noneReady":["還沒有可以下載的組別：每組需要照片和地點","还没有可以下载的组别：每组需要照片和地点","Nothing ready to download yet — each post needs a photo and a place","まだダウンロードできる投稿がありません。各投稿に写真と場所が必要です","아직 다운로드할 수 있는 게시물이 없어요. 각 게시물에 사진과 장소가 필요해요","Aún no hay nada listo: cada post necesita una foto y un lugar","Nada pronto ainda: cada post precisa de uma foto e um local","अभी डाउनलोड के लिए कुछ तैयार नहीं — हर पोस्ट में फ़ोटो और जगह चाहिए","Belum ada yang sedia dimuat turun — setiap hantaran perlu foto dan lokasi"],"genProgress":["產生中 {k} / {n}","生成中 {k} / {n}","Creating {k} / {n}","作成中 {k} / {n}","만드는 중 {k} / {n}","Creando {k} / {n}","Criando {k} / {n}","बन रहा है {k} / {n}","Menjana {k} / {n}"],"zipName":["地點貼文","地点贴文","Location-posts","スポット投稿","장소게시물","Posts-lugares","Posts-lugares","लोकेशन-पोस्ट","Hantaran-lokasi"],"zipDone":["已下載 {n} 張（ZIP）","已下载 {n} 张（ZIP）","Downloaded {n} images (ZIP)","{n}枚をダウンロードしました（ZIP）","{n}장 다운로드 완료 (ZIP)","Descargadas {n} imágenes (ZIP)","{n} imagens baixadas (ZIP)","{n} इमेज डाउनलोड हुईं (ZIP)","{n} imej dimuat turun (ZIP)"],"zipDoneRest":["已下載 {n} 張（ZIP），另有 {r} 組還沒完成","已下载 {n} 张（ZIP），另有 {r} 组还没完成","Downloaded {n} images (ZIP); {r} posts aren’t finished yet","{n}枚をダウンロードしました（ZIP）。残り{r}件は未完成です","{n}장 다운로드 완료 (ZIP), {r}개는 아직 완성되지 않았어요","Descargadas {n} imágenes (ZIP); faltan {r} posts por completar","{n} imagens baixadas (ZIP); {r} posts ainda não estão prontos","{n} इमेज डाउनलोड हुईं (ZIP); {r} पोस्ट अभी अधूरी हैं","{n} imej dimuat turun (ZIP); {r} hantaran belum siap"],"zipFail":["打包失敗，請再試一次","打包失败，请再试一次","Couldn’t create the ZIP. Please try again.","ZIP を作成できませんでした。もう一度お試しください","ZIP을 만들지 못했어요. 다시 시도해 주세요","No se pudo crear el ZIP. Inténtalo de nuevo.","Não foi possível criar o ZIP. Tente de novo.","ZIP नहीं बन सकी। कृपया फिर से कोशिश करें।","ZIP gagal dijana. Sila cuba lagi."],"noUrl":["清單裡沒有找到網址","清单里没有找到网址","No URLs found in the list","リストに URL が見つかりません","목록에서 URL을 찾지 못했어요","No hay URL en la lista","Nenhuma URL encontrada na lista","सूची में कोई URL नहीं मिला","Tiada URL ditemui dalam senarai"],"filled":["已填入 {n} 組","已填入 {n} 组","Filled {n} posts","{n}件に入力しました","{n}개를 채웠어요","Se rellenaron {n} posts","{n} posts preenchidos","{n} पोस्ट भरी गईं","{n} hantaran telah diisi"],"filledOver":["已填入 {n} 組，超過八組的部分沒有放入","已填入 {n} 组，超过八组的部分没有放入","Filled {n} posts; anything beyond 8 was left out","{n}件に入力しました。8件を超えた分は入れていません","{n}개를 채웠어요. 8개를 넘는 부분은 넣지 않았어요","Se rellenaron {n} posts; lo que pasa de 8 no se añadió","{n} posts preenchidos; o que passou de 8 ficou de fora","{n} पोस्ट भरी गईं; 8 से ज़्यादा वाली छोड़ दी गईं","{n} hantaran telah diisi; selebihnya selepas 8 tidak dimasukkan"],"confirmClear":["清空全部八組？照片、網址和調整結果都會移除，這個動作無法復原。","清空全部八组？照片、网址和调整结果都会移除，这个操作无法撤销。","Clear all 8 posts? Photos, URLs and adjustments will be removed. This can’t be undone.","8件すべてをクリアしますか？写真、URL、調整内容が削除され、元に戻せません。","8개를 모두 지울까요? 사진, URL, 조정 내용이 삭제되며 되돌릴 수 없어요.","¿Borrar los 8 posts? Se quitarán fotos, URL y ajustes. No se puede deshacer.","Limpar os 8 posts? Fotos, URLs e ajustes serão removidos. Isso não pode ser desfeito.","सभी 8 पोस्ट हटाएँ? फ़ोटो, URL और बदलाव हट जाएँगे। इसे वापस नहीं किया जा सकता।","Kosongkan kesemua 8 hantaran? Foto, URL dan pelarasan akan dibuang. Tindakan ini tidak boleh dibatalkan."],"cleared":["已清空，設定保留","已清空，设置保留","Cleared — settings kept","クリアしました（設定はそのまま）","지웠어요. 설정은 그대로예요","Borrado; los ajustes se mantienen","Limpo; as configurações foram mantidas","सब हटा दिया — सेटिंग्स बनी रहीं","Dikosongkan — tetapan dikekalkan"],"pastedTo":["照片已放入第 {n} 組","照片已放入第 {n} 组","Photo added to post {n}","写真を{n}件目に入れました","사진을 {n}번에 넣었어요","Foto añadida al post {n}","Foto adicionada ao post {n}","फ़ोटो पोस्ट {n} में जोड़ी गई","Foto dimasukkan ke hantaran {n}"]};</script>
+<script>// ok-i18n: imokahhhh.com 共用多國語言。順序 = 網址 ?lang= → 使用者上次選的（全站共用 ok-lang）→ 瀏覽器語言 → English
+// 用法：頁面先放一段 inline script 設定 window.OK_I18N = { key: [9 個語言] }（順序同 LANGS），再放這支程式。
+// 標記：data-i="key"（換 textContent；key 以 ! 結尾換 innerHTML）、data-ia="aria-label:key;title:key2"（換屬性）。
+// 特殊 key：_title（document.title）、_desc（meta description）。
+(function () {
+  var D = window.OK_I18N || {};
+  var LANGS = ['zh-Hant', 'zh-Hans', 'en', 'ja', 'ko', 'es', 'pt', 'hi', 'ms'];
+  var NAMES = { 'zh-Hant': '繁體中文', 'zh-Hans': '简体中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español', pt: 'Português', hi: 'हिन्दी', ms: 'Bahasa Melayu' };
+  var SHORT = { 'zh-Hant': '繁中', 'zh-Hans': '简中', en: 'EN', ja: '日本語', ko: '한국어', es: 'ES', pt: 'PT', hi: 'हिं', ms: 'MS' };
+  var cur = 'zh-Hant';
+  function norm(t) {
+    t = String(t || '').toLowerCase();
+    if (t.indexOf('zh') === 0) return /hant|-tw|-hk|-mo/.test(t) ? 'zh-Hant' : 'zh-Hans';
+    var b = t.split('-')[0];
+    if (b === 'id') return 'ms';
+    return LANGS.indexOf(b) >= 0 ? b : null;
+  }
+  function detect() {
+    var q = /[?&]lang=([\w-]+)/.exec(location.search);
+    if (q) { var n = LANGS.indexOf(q[1]) >= 0 ? q[1] : norm(q[1]); if (n) return n; }
+    try {
+      var saved = localStorage.getItem('ok-lang') || localStorage.getItem('bk-lang');
+      if (LANGS.indexOf(saved) >= 0) return saved;
+    } catch (e) {}
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language];
+    for (var i = 0; i < list.length; i++) { var l = norm(list[i]); if (l) return l; }
+    return 'en';
+  }
+  function t(key, lang) {
+    var v = D[key]; if (!v) return '';
+    var s = v[LANGS.indexOf(lang || cur)];
+    return s == null || s === '' ? (v[2] || v[0]) : s;   // 缺翻譯時退回英文，再退回繁中
+  }
+  function fmt(s, vars) { return String(s).replace(/\{(\w+)\}/g, function (m, k) { return vars && k in vars ? vars[k] : m; }); }
+  function apply(lang) {
+    cur = lang;
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i]').forEach(function (el) {
+      var k = el.getAttribute('data-i'), v = t(k);
+      if (!v) return;
+      if (k.slice(-1) === '!') el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll('[data-ia]').forEach(function (el) {
+      el.getAttribute('data-ia').split(';').forEach(function (pair) {
+        var p = pair.split(':'); if (p.length === 2 && D[p[1]]) el.setAttribute(p[0].trim(), t(p[1].trim()));
+      });
+    });
+    if (D._title) document.title = t('_title');
+    var md = document.querySelector('meta[name="description"]'); if (md && D._desc) md.setAttribute('content', t('_desc'));
+    var c = document.getElementById('langCur'); if (c) { c.textContent = SHORT[lang]; }
+    var b = document.getElementById('langBtn'); if (b) b.setAttribute('aria-label', 'Language: ' + NAMES[lang]);
+    document.querySelectorAll('#langMenu [role="menuitemradio"]').forEach(function (x) { x.setAttribute('aria-checked', String(x.getAttribute('lang') === lang)); });
+    document.dispatchEvent(new CustomEvent('ok:lang', { detail: lang }));
+  }
+  window.OK = { t: t, fmt: fmt, lang: function () { return cur; }, apply: apply, LANGS: LANGS };
+
+  // 語言選單：地球圖示 + 簡稱，點開是各語言的原文名稱
+  var btn = document.getElementById('langBtn'), menu = document.getElementById('langMenu'), wrap = document.getElementById('lang');
+  if (btn && menu && wrap) {
+    LANGS.forEach(function (l) {
+      var li = document.createElement('li'); li.setAttribute('role', 'none');
+      var x = document.createElement('button');
+      x.type = 'button'; x.setAttribute('role', 'menuitemradio'); x.setAttribute('lang', l); x.textContent = NAMES[l];
+      x.addEventListener('click', function () {
+        try { localStorage.setItem('ok-lang', l); } catch (e) {}
+        close(); apply(l); btn.focus();
+      });
+      li.appendChild(x); menu.appendChild(li);
+    });
+    var open = function () { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); var c = menu.querySelector('[aria-checked="true"]') || menu.querySelector('button'); c.focus(); };
+    var close = function () { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', function () { if (menu.hidden) open(); else close(); });
+    document.addEventListener('click', function (e) { if (!menu.hidden && !wrap.contains(e.target)) close(); });
+    menu.addEventListener('keydown', function (e) {
+      var items = Array.prototype.slice.call(menu.querySelectorAll('button')), i = items.indexOf(document.activeElement);
+      if (e.key === 'Escape') { close(); btn.focus(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+    });
+  }
+  apply(detect());
+})();
 </script>
 </body>
 </html>
